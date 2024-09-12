@@ -3,7 +3,11 @@ const { startGame, guessLetter } = require('./game/hangman');
 const { handleRpsCommand, handleRpsChoice } = require('./game/rps');
 const { startNumberGame, joinNumberGame, handleNumberGuess } = require('./game/numbergame');
 
+<<<<<<< HEAD
 const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); // Замените на ваш реальный токен
+=======
+const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); //Токен
+>>>>>>> 7f19afcbc37d42290930bd7679685183a1182fd8
 
 // Хранение состояния игры
 let gameState = {};
