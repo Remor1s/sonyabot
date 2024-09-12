@@ -1,3 +1,6 @@
+// game/numbergame.js
+
+// Хранение состояния игры
 let gameState = {};
 
 // Функция для начала игры
@@ -11,7 +14,8 @@ function startNumberGame(ctx) {
 
     gameState[chatId] = {
         secretNumber: secretNumber,
-        players: []
+        players: [],
+        currentPlayerIndex: 0 // Индекс текущего игрока
     };
 
     ctx.reply('Игра началась! Используйте команду /join1 для присоединения.');
@@ -35,7 +39,7 @@ function joinNumberGame(ctx) {
 }
 
 // Функция для угадывания числа
-function guessNumber(ctx) {
+function handleNumberGuess(ctx) {
     const chatId = ctx.chat.id;
     const guess = parseInt(ctx.message.text);
     const playerName = ctx.from.username || ctx.from.first_name;
@@ -48,11 +52,18 @@ function guessNumber(ctx) {
         return ctx.reply('Вы не участвуете в игре. Используйте команду /join1 для присоединения.');
     }
 
+    const game = gameState[chatId];
+
+    // Проверка очередности
+    if (game.players[game.currentPlayerIndex] !== playerName) {
+        return ctx.reply('Сейчас не ваше время для угадывания числа.');
+    }
+
     if (isNaN(guess)) {
         return ctx.reply('Пожалуйста, введите правильное число.');
     }
 
-    const secretNumber = gameState[chatId].secretNumber;
+    const secretNumber = game.secretNumber;
 
     if (guess === secretNumber) {
         delete gameState[chatId];
@@ -62,18 +73,12 @@ function guessNumber(ctx) {
     } else {
         ctx.reply('Загаданное число меньше.');
     }
+
+    // Переход к следующему игроку
+    game.currentPlayerIndex = (game.currentPlayerIndex + 1) % game.players.length;
 }
 
-// Обработка сообщения для угадывания числа
-function handleNumberGuess(ctx) {
-    const messageText = ctx.message.text;
-    const guess = parseInt(messageText);
-
-    if (!isNaN(guess)) {
-        guessNumber(ctx);
-    }
-}
-
+// Экспорт функций
 module.exports = {
     startNumberGame,
     joinNumberGame,
