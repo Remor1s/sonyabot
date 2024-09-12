@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 const { startGame, guessLetter } = require('./game/hangman');
 const { handleRpsCommand, handleRpsChoice } = require('./game/rps');
 
-const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); // Замените YOUR_BOT_TOKEN на ваш реальный токен
+const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); //Токен
 
 // Хранение состояния игры
 let gameState = {};
