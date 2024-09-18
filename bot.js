@@ -1,10 +1,11 @@
 // Импорт необходимых модулей
 const { Telegraf } = require('telegraf');
-const { startNumberGame, joinNumberGame, handleNumberGuess } = require('./game/numbergame'); // Импорт функций из numbergame.js
+const { startNumberGame, joinNumberGame, handleNumberGuess } = require('./game/numbergame');
 const { startGame, guessLetter } = require('./game/hangman');
 const { handleRpsCommand, handleRpsChoice } = require('./game/rps');
+const { getWeekdaysUntilSummer } = require('./other/summer'); // Импорт функции getWeekdaysUntilSummer
 
-const bot = new Telegraf('7394412557:AAEIbrwjWV4UHCx0tF0WByAW7FkUe7Fx4lg'); // Замените YOUR_BOT_TOKEN на ваш реальный токен
+const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); // Замените YOUR_BOT_TOKEN на ваш реальный токен
 
 // Хранение состояния игры
 let gameState = {};
@@ -16,12 +17,6 @@ bot.command('creategame1', (ctx) => {
 
 bot.command('join1', (ctx) => {
     joinNumberGame(ctx);
-});
-
-// Обработчик для угадывания чисел
-bot.on('text', (ctx) => {
-    // Попытка угадать число
-    handleNumberGuess(ctx);
 });
 
 // Команды и логика для игры в виселицу
@@ -59,6 +54,23 @@ bot.command('play', (ctx) => {
 
 bot.hears(/камень|ножницы|бумага/, (ctx) => {
     handleRpsChoice(ctx);
+});
+
+// Команда /summer
+bot.command('summer', (ctx) => {
+    try {
+        const weekdaysUntilSummer = getWeekdaysUntilSummer();
+        ctx.reply(`Количество рабочих дней до начала лета: ${weekdaysUntilSummer}`);
+    } catch (error) {
+        console.error('Ошибка при обработке команды /summer:', error);
+        ctx.reply('Произошла ошибка при подсчете рабочих дней до лета.');
+    }
+});
+
+// Обработчик для угадывания чисел (Должен быть последним)
+bot.on('text', (ctx) => {
+    // Попытка угадать число
+    handleNumberGuess(ctx);
 });
 
 // Запуск бота
