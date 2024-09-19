@@ -1,3 +1,4 @@
+// hangman.js
 const fs = require('fs');
 const path = require('path');
 
@@ -54,11 +55,11 @@ function startGame() {
     hiddenWord = '_ '.repeat(currentWord.length).trim(); // Формирование строки с подчеркиваниями
     attemptsLeft = 6;
     guessedLetters = [];
-    return hiddenWord;
+    return { hiddenWord }; // Возвращаем объект с hiddenWord
 }
 
 // Отгадка буквы
-function guessLetter(letter) {
+function guessLetter(letter, game) {
     if (!currentWord || attemptsLeft === 0) {
         return { message: 'Игра не начата! Используйте команду /start_hangman.' };
     }
@@ -96,4 +97,3 @@ function guessLetter(letter) {
 }
 
 module.exports = { startGame, guessLetter };
-

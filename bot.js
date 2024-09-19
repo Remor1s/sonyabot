@@ -1,11 +1,11 @@
-// Импорт необходимых модулей
+// bot.js
 const { Telegraf } = require('telegraf');
 const { startNumberGame, joinNumberGame, handleNumberGuess } = require('./game/numbergame');
-const { startGame, guessLetter } = require('./game/hangman');
+const { startGame, guessLetter } = require('./game/hangman'); // Импорт функций для игры в виселицу
 const { handleRpsCommand, handleRpsChoice } = require('./game/rps');
 const { getWeekdaysUntilSummer } = require('./other/summer'); // Импорт функции getWeekdaysUntilSummer
 
-const bot = new Telegraf('7285463706:AAFH-W3xYx194RhvPg6jwfsEp-ZD4kjVM2M'); // Замените YOUR_BOT_TOKEN на ваш реальный токен
+const bot = new Telegraf('7394412557:AAEIbrwjWV4UHCx0tF0WByAW7FkUe7Fx4lg'); // Замените YOUR_BOT_TOKEN на ваш токен
 
 // Хранение состояния игры
 let gameState = {};
@@ -21,12 +21,12 @@ bot.command('join1', (ctx) => {
 
 // Команды и логика для игры в виселицу
 bot.command('start_hangman', (ctx) => {
-    const hiddenWord = startGame();
-    if (!hiddenWord) {
+    const game = startGame();
+    if (!game) {
         return ctx.reply('Слова закончились!');
     }
-    gameState[ctx.chat.id] = { gameType: 'hangman', hiddenWord };
-    ctx.reply(`Игра началась! Слово: ${hiddenWord}`);
+    gameState[ctx.chat.id] = { gameType: 'hangman', ...game };
+    ctx.reply(`Игра началась! Слово: ${game.hiddenWord}`);
 });
 
 bot.command('guess', (ctx) => {
@@ -36,7 +36,7 @@ bot.command('guess', (ctx) => {
     }
 
     if (gameState[ctx.chat.id] && gameState[ctx.chat.id].gameType === 'hangman') {
-        const result = guessLetter(letter);
+        const result = guessLetter(letter, gameState[ctx.chat.id]);
         ctx.reply(result.message);
         if (result.finished) {
             delete gameState[ctx.chat.id];
